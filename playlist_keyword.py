@@ -1,5 +1,6 @@
 from nltk import *
-import azapi
+from module.lyrics import get_lyrics
+#import azapi
 
 # playlist.txt 파일에서 가수와 제목을 가져옴
 with open('playlist.txt', 'r') as f:
@@ -14,11 +15,12 @@ for i in range(len(playlist)) :
 
 
 # 앞에서 가져온 가수와 제목을 바탕으로 az api를 이용해 가사 검색 & 명사, 형용사 키워드 추출
-Music = azapi.AZlyrics()
+# Music = azapi.AZlyrics()
 for artist, title in playlist_splited :
     print(artist, '-', title)
     # 가사 검색
-    lyric = Music.getLyrics(artist=artist, title=title)
+    #lyric = Music.getLyrics(artist=artist, title=title)
+    lyric = get_lyrics(artist, title)
     # 가사를 모두 소문자로 변경
     lyric = lyric.lower()
     # lyric 문자열을 토큰화 한 다음 universal 품사 tagset 적용
