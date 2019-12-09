@@ -1,10 +1,19 @@
 from nltk import *
 from module.lyrics import get_lyrics
 import os
+<<<<<<< HEAD
 
 def get_keyword():
     # mp3 파일 업로드 경로 (!!! 경로 수정 필요)
     path = '../../media/musics'
+=======
+#import azapi
+
+
+def get_keyword():
+    # mp3 파일 업로드 경로 (!!! 경로 수정 필요)
+    path = './TEST/mp3'
+>>>>>>> origin/master
     # 파일명으로 구성된 리스트 생성
     file_list = os.listdir(path)
 
@@ -18,6 +27,10 @@ def get_keyword():
         playlist = f.readlines()
         # 개행 문자 제거
         playlist = list(map(lambda s:s.strip(), playlist))
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/master
     playlist_splited = list()
     for i in range(len(playlist)) :
         # '-'를 기준으로 가수와 제목을 구분
@@ -27,8 +40,13 @@ def get_keyword():
     playlist_splited = list()
     for i in range(len(file_list)):
         # '-'를 기준으로 가수와 제목을 구분
+<<<<<<< HEAD
         playlist_splited.append(file_list[i].split('-'))
     
+=======
+        playlist_splited.append(file_list[i].split(' - '))
+
+>>>>>>> origin/master
     # print(playlist_splited)
 
     # 앞에서 가져온 가수와 제목을 바탕으로 az api를 이용해 가사 검색 & 명사, 형용사 키워드 추출
@@ -75,4 +93,8 @@ def get_keyword():
             i += 1
 
     print(keyword_content, keyword_style)
+<<<<<<< HEAD
     return keyword_content, keyword_style
+=======
+    return keyword_content, keyword_style
+>>>>>>> origin/master

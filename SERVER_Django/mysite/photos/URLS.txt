@@ -1,0 +1,13 @@
+
+Item no.: 1 --> Item name = dear painting
+Evaluating...
+Starting Download...
+Image URL: https://images.fineartamerica.com/images/artworkimages/mediumlarge/1/dear-deer-ursula-vogt.jpg
+Completed Image ====> 1.dear-deer-ursula-vogt.jpg
+Image URL: https://images.fineartamerica.com/images-medium-large-5/spotted-dear-parwez-khan.jpg
+Completed Image ====> 2.spotted-dear-parwez-khan.jpg
+Image URL: https://images.fineartamerica.com/images/artworkimages/mediumlarge/2/dear-in-forest-nenad-vasic.jpg
+Completed Image ====> 3.dear-in-forest-nenad-vasic.jpg
+
+Errors: 0
+
