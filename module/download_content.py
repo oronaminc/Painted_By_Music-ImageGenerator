@@ -1,18 +1,19 @@
-from google_images_download import google_images_download 
+from google_images_download import google_images_download
 import sys
 
-def get_urls(keyword, limit):
+
+def get_content_urls(keyword, limit):
     orig_stdout = sys.stdout
     f = open('URLS.txt', 'w')
     sys.stdout = f
 
     response = google_images_download.googleimagesdownload()
 
-    arguments = {"keywords"     : keyword,
-                "limit"        : limit,
-                "print_urls"   : True,
-                #"size"         : ">2MP",
-                }
+    arguments = {"keywords": keyword,
+                 "limit": limit,
+                 "print_urls": True,
+                 # "size"         : ">2MP",
+                 }
     paths = response.download(arguments)
 
     sys.stdout = orig_stdout
@@ -25,11 +26,12 @@ def get_urls(keyword, limit):
     urls = []
     for j in range(len(content)):
         if content[j][:9] == 'Completed':
-            urls.append(content[j-1][11:-1])   
-    
+            urls.append(content[j-1][11:-1])
+
     return urls
-    #for item in urls:
+    # for item in urls:
     #    print(item)
+
 
 if __name__ == "__main__":
     get_urls()
