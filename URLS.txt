@@ -1,13 +1,13 @@
 
-Item no.: 1 --> Item name = love
+Item no.: 1 --> Item name = dear painting
 Evaluating...
 Starting Download...
-Image URL: https://i.ytimg.com/vi/CPZIxOkkZq4/maxresdefault.jpg
-Completed Image ====> 1.maxresdefault.jpg
-Image URL: https://i.ytimg.com/vi/7d2mqWH9w7E/maxresdefault.jpg
-Completed Image ====> 2.maxresdefault.jpg
-Image URL: https://www.yourtango.com/sites/default/files/styles/header_slider/public/image_blog/bible-marriage-love-scripture-1-corinthians-13.jpg?itok=BXe6JFHT
-Completed Image ====> 3.bible-marriage-love-scripture-1-corinthians-13.jpg
+Image URL: https://images.fineartamerica.com/images/artworkimages/mediumlarge/1/dear-deer-ursula-vogt.jpg
+Completed Image ====> 1.dear-deer-ursula-vogt.jpg
+Image URL: https://images.fineartamerica.com/images-medium-large-5/spotted-dear-parwez-khan.jpg
+Completed Image ====> 2.spotted-dear-parwez-khan.jpg
+Image URL: https://images.fineartamerica.com/images/artworkimages/mediumlarge/2/dear-in-forest-nenad-vasic.jpg
+Completed Image ====> 3.dear-in-forest-nenad-vasic.jpg
 
 Errors: 0
 
