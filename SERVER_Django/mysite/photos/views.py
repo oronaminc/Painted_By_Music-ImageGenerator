@@ -27,6 +27,8 @@ import sys
 from monkeylearn import MonkeyLearn
 
 #download
+from urllib.request import urlopen
+from urllib.error import URLError, HTTPError
 from google_images_download import google_images_download 
 import sys
 
@@ -35,6 +37,9 @@ import requests
 
 #playlist_keyword
 from nltk import *
+
+#image process
+import cv2
 
 
 class BasicUploadView(View):
@@ -89,6 +94,17 @@ def clear_database(request):
         photo.delete()
     return redirect(request.POST.get('next'))
 
+def resizeImage(name):
+    pth = os.path.dirname(os.path.dirname(__file__))
+    path = pth+'/photos/images/'
+    path2 = pth+'/static/images/'
+    img = cv2.imread(path+name)
+    row = img.shape[0]
+    ratio = 148/row
+    resize_img = cv2.resize(img, dsize=(0,0), fx=ratio, fy=ratio, interpolation=cv2.INTER_AREA)
+    cv2.imwrite(path2+name, resize_img)
+    cv2.waitKey()
+
 def get_lyrics(artist,song_title):
     artist = artist.lower()
     song_title = song_title.lower()
@@ -138,6 +154,7 @@ def get_urls(keyword, limit, isContent):
     response = google_images_download.googleimagesdownload()
 
     if not isContent: keyword += ' painting'
+
     arguments = {"keywords"     : keyword,
                 "limit"        : limit,
                 "print_urls"   : True,
@@ -155,7 +172,16 @@ def get_urls(keyword, limit, isContent):
     urls = []
     for j in range(len(content)):
         if content[j][:9] == 'Completed':
-            urls.append(content[j-1][11:-1])   
+            url = content[j-1][11:-1]
+
+            try:
+                res = urlopen(url)
+            except HTTPError:
+                continue
+
+            urls.append(url)
+
+            if len(urls) == 3 : break
     
     return urls
 
@@ -171,6 +197,34 @@ def get_image(content, style):
     #print(r.json())
     return r.json()
 
+def make_txt(url_content, url_style):
+    f = open("url_content.txt", "w")
+
+    print(url_content)
+
+    i = random.randint(0, 2)
+    tmp_url_content = list()
+    while i < len(url_content):
+        tmp_url_content.append(url_content[i])
+        i += 3
+
+    if len(tmp_url_content) > 5:
+        random.shuffle(tmp_url_content)
+        tmp_url_content = tmp_url_content[:5]
+
+    for i in range(0, len(tmp_url_content)):
+        f.writelines(tmp_url_content[i]+"\n")
+
+    f.close()
+
+    f = open("url_style.txt", "w")
+    style_str = url_style[random.randint(0, len(url_style)-1)]
+    f.writelines(style_str)
+    f.close()
+
+    return tmp_url_content, style_str
+
+
 def get_keyword():
     # mp3 파일 업로드 경로 (!!! 경로 수정 필요)
     pth = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
@@ -183,17 +237,6 @@ def get_keyword():
     for i in range(len(file_list)):
         file_list[i] = file_list[i].replace(".mp3", "")
 
-    '''
-    # playlist.txt 파일에서 가수와 제목을 가져옴
-    with open('playlist.txt', 'r') as f:
-        playlist = f.readlines()
-        # 개행 문자 제거
-        playlist = list(map(lambda s:s.strip(), playlist))
-    playlist_splited = list()
-    for i in range(len(playlist)) :
-        # '-'를 기준으로 가수와 제목을 구분
-        playlist_splited.append(playlist[i].split(' - '))
-    '''
 
     playlist_splited = list()
     for i in range(len(file_list)):
@@ -212,9 +255,8 @@ def get_keyword():
         # 가사 검색
         #lyric = Music.getLyrics(artist=artist, title=title)
         lyric = get_lyrics(artist, title)
-        print("=============Find Lyrics Done================\n")
+        print("=============Find Lyrics Done================")
 
-        print("============Start to Find Keyword================")
         # 가사를 모두 소문자로 변경
         lyric = lyric.lower()
         # lyric 문자열을 토큰화 한 다음 universal 품사 tagset 적용
@@ -238,60 +280,193 @@ def get_keyword():
         a = fd_noun.most_common(3)
         b = fd_adj.most_common(3)
 
-        print(a, b)
+        #print(a, b)
         i = 0
         while i < 3:
             keyword_content.append(a[i][0])
             keyword_style.append(b[i][0])
-            i += 1
+            i += 3
 
-    print(keyword_content, keyword_style)
+    print("Content Keywords :",keyword_content)
+    print("Style Keywords :", keyword_style)
     return keyword_content, keyword_style
 
 def run(request):
     pth = os.path.dirname(os.path.dirname(__file__))
     Path = pth+'/photos/output/'
-    '''
-    Lyrics = get_lyrics("annemarie", "2002")
-    print(Lyrics)
-    print("=============Find Lyrics Done================")
-    Keywords = get_keywords(Lyrics, 3)
-    while(not Keywords): Keywords = get_keywords(Lyrics, 3)
-    print(Keywords)
-    print(Keywords[1])
-    print("=============Find Keyword Done================")
-    Urls = get_urls(Keywords[1], 3)
-    print(Urls)
-    print("=============Find Urls Done================")
-    style = "https://i.pinimg.com/originals/82/0f/c3/820fc362b0e1fdf18f755e498bd34f98.jpg"
-    Url = get_image(Urls[2], style)
-    N = len(glob.glob(Path+'*'))
-    print(N)
-    urllib.request.urlretrieve(Url['output_url'], Path+"output"+str(N+1)+".png")
-    print("=============Create Image Done================")
-    '''
+    print("============Start to Find Keyword=============")
     keyword_content, keyword_style = get_keyword()
-
     print("============Find Keyword Done================\n")
 
     print("============Start to Find Urls================")
-    Url_content = get_urls(keyword_content[1], 3, 1)
-    while not Url_content: Url_content = get_urls(keyword_content[1], 3, 1)
+    limit = 5
+
+    i = 0
+    playlist_url_content = list()
+    while i < len(keyword_content):
+        Url_content = get_urls(keyword_content[i], limit, 1)
+        while not Url_content:
+            Url_content = get_urls(keyword_content[i], limit, 1)
+        playlist_url_content += Url_content
+        i += 1
+
+    print("content: ", playlist_url_content)
+
+    playlist_url_style = get_urls(keyword_style[random.randint(0, len(keyword_style)-1)], limit, 0)
+    while not playlist_url_style :
+        playlist_url_style = get_urls(keyword_style[random.randint(0, len(keyword_style)-1)], limit, 0)
+    print("style: ", playlist_url_style)
+
+    content_five_list, style_str = make_txt(playlist_url_content, playlist_url_style)
+    '''
+    limit = 5
+    Url_content = get_urls(keyword_content[1], limit, 1)
+    while not Url_content: Url_content = get_urls(keyword_content[1], limit, 1)
     print("content: ", Url_content)
-    Url_style = get_urls(keyword_style[1], 3, 0)
-    while not Url_style: Url_style = get_urls(keyword_style[1], 3, 0)
+    Url_style = get_urls(keyword_style[1], limit, 0)
+    while not Url_style: Url_style = get_urls(keyword_style[1], limit, 0)
     print("style: ", Url_style)
+    '''
     print("=============Find Urls Done================\n")
 
+    print("=============Start to Select Content Image============")
+
+    temp_path = pth+"/photos/images/"
+    temp_N = len(glob.glob(temp_path+'*'))
+    print(content_five_list)
+    for idx, item in enumerate(content_five_list):
+        print(item)
+        urllib.request.urlretrieve(item, temp_path+str(idx+1)+".png")
+    for i in range(1, 6):
+        resizeImage(str(i)+'.png')
+
+    
+    return redirect(request.POST.get('next'))
+
+def make1(request):
+    
+
+    f = open("selected_content_number.txt", "w+")
+    f.write("1")
+    f.close()
+    print("=============Select Content Image Done============")
+
+    pth = os.path.dirname(os.path.dirname(__file__))
+    #Path_unresized = pth+'/photos/images/'
+    Path_output = pth+'/static/output/'
+
     print("=============Start to Create Image================")
-    #style = "https://i.pinimg.com/originals/82/0f/c3/820fc362b0e1fdf18f755e498bd34f98.jpg"
-    rand = random.randint(0, 2)
-    print('rand : ', rand)
-    Url = get_image(Url_content[1], Url_style[rand])
+    selected = int(open("selected_content_number.txt", "r").readlines()[0])
+    final_content = str(open("url_content.txt", "r").readlines()[
+                        selected-1]).replace("\n", "")
+    final_style = str(open("url_style.txt", "r").readlines()[0]).replace("\n", "")
+
+    Url = get_image(final_content, final_style)
+
     #Path = os.getcwd()+'/output/'
-    N = len(glob.glob(Path+'*'))
-    print(N)
-    urllib.request.urlretrieve(Url['output_url'], Path+"output"+str(N+1)+".png")
+    N = len(glob.glob(Path_output+'*'))
+    urllib.request.urlretrieve(Url['output_url'], Path_output+"output.png")
+    #urllib.request.urlretrieve(Url['output_url'], Path+"output.png")
+    print("=============Create Image Done================")
+   
+    return redirect(request.POST.get('next'))
+
+def make2(request):
+    f = open("selected_content_number.txt", "w+")
+    f.write("2")
+    f.close()
+    print("=============Select Content Image Done============")
+
+    pth = os.path.dirname(os.path.dirname(__file__))
+    #Path_unresized = pth+'/photos/images/'
+    Path_output = pth+'/static/output/'
+
+    print("=============Start to Create Image================")
+    selected = int(open("selected_content_number.txt", "r").readlines()[0])
+    final_content = str(open("url_content.txt", "r").readlines()[
+                        selected-1]).replace("\n", "")
+    final_style = str(open("url_style.txt", "r").readlines()[0]).replace("\n", "")
+
+    Url = get_image(final_content, final_style)
+
+    #Path = os.getcwd()+'/output/'
+    N = len(glob.glob(Path_output+'*'))
+    urllib.request.urlretrieve(Url['output_url'], Path_output+"output.png")
+    #urllib.request.urlretrieve(Url['output_url'], Path+"output.png")
+    print("=============Create Image Done================")
+    return redirect(request.POST.get('next'))
+
+def make3(request):
+    f = open("selected_content_number.txt", "w+")
+    f.write("3")
+    f.close()
+    print("=============Select Content Image Done============")
+
+    pth = os.path.dirname(os.path.dirname(__file__))
+    #Path_unresized = pth+'/photos/images/'
+    Path_output = pth+'/static/output/'
+
+    print("=============Start to Create Image================")
+    selected = int(open("selected_content_number.txt", "r").readlines()[0])
+    final_content = str(open("url_content.txt", "r").readlines()[
+                        selected-1]).replace("\n", "")
+    final_style = str(open("url_style.txt", "r").readlines()[0]).replace("\n", "")
+
+    Url = get_image(final_content, final_style)
+
+    #Path = os.getcwd()+'/output/'
+    N = len(glob.glob(Path_output+'*'))
+    urllib.request.urlretrieve(Url['output_url'], Path_output+"output.png")
+    #urllib.request.urlretrieve(Url['output_url'], Path+"output.png")
+    print("=============Create Image Done================")
+    return redirect(request.POST.get('next'))
+
+def make4(request):
+    f = open("selected_content_number.txt", "w+")
+    f.write("4")
+    f.close()
+    print("=============Select Content Image Done============")
+
+    pth = os.path.dirname(os.path.dirname(__file__))
+    #Path_unresized = pth+'/photos/images/'
+    Path_output = pth+'/static/output/'
+
+    print("=============Start to Create Image================")
+    selected = int(open("selected_content_number.txt", "r").readlines()[0])
+    final_content = str(open("url_content.txt", "r").readlines()[
+                        selected-1]).replace("\n", "")
+    final_style = str(open("url_style.txt", "r").readlines()[0]).replace("\n", "")
+
+    Url = get_image(final_content, final_style)
+
+    #Path = os.getcwd()+'/output/'
+    N = len(glob.glob(Path_output+'*'))
+    urllib.request.urlretrieve(Url['output_url'], Path_output+"output.png")
+    #urllib.request.urlretrieve(Url['output_url'], Path+"output.png")
+    print("=============Create Image Done================")
+    return redirect(request.POST.get('next'))
+
+def make5(request):
+    f = open("selected_content_number.txt", "w+")
+    f.write("5")
+    f.close()
+    print("=============Select Content Image Done============")
+
+    pth = os.path.dirname(os.path.dirname(__file__))
+    #Path_unresized = pth+'/photos/images/'
+    Path_output = pth+'/static/output/'
+
+    print("=============Start to Create Image================")
+    selected = int(open("selected_content_number.txt", "r").readlines()[0])
+    final_content = str(open("url_content.txt", "r").readlines()[
+                        selected-1]).replace("\n", "")
+    final_style = str(open("url_style.txt", "r").readlines()[0]).replace("\n", "")
+
+    Url = get_image(final_content, final_style)
+
+    #Path = os.getcwd()+'/output/'
+    N = len(glob.glob(Path_output+'*'))
+    urllib.request.urlretrieve(Url['output_url'], Path_output+"output.png")
     #urllib.request.urlretrieve(Url['output_url'], Path+"output.png")
     print("=============Create Image Done================")
     return redirect(request.POST.get('next'))

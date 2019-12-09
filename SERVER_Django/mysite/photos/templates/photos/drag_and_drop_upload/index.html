@@ -15,6 +15,7 @@
 {% endblock %}
 
 {% block photos_content %}
+
   <div class="well text-muted text-center" style="padding-top: 4rem; padding-bottom: 4rem;">
     <span class="glyphicon glyphicon-arrow-down" style="font-size: 4rem;"></span>
     <h3>Drop Musics Here to Upload</h3>
@@ -40,12 +41,61 @@
     </tbody>
   </table>
 
-  <form method="post" action="{% url 'photos:run' %}">
+    <form method="post" action="{% url 'photos:run' %}">
       {% csrf_token %}
       <input type="hidden" name="next" value="{{ request.path }}">
       <button type="submit" class="btn btn-primary">
-        <span class="glyphicon glyphicon-cloud-upload"></span> Clear Database
+        <span class="glyphicon glyphicon-cloud-upload"></span> Create Image
       </button>
     </form>
+
+    <br>
+    <div>
+    <form method="post" style="float:left;width:20%;" action="{% url 'photos:make1' %}" >
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ request.path }}">
+        <button type="submit">
+            <img src="{% static 'images/1.png' %}">
+        </button>
+    </form>
+    <form method="post" style="float:left;width:20%;" action="{% url 'photos:make2' %}">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ request.path }}">
+        <button type="submit">
+            <img src="{% static 'images/2.png' %}">
+        </button>
+    </form>
+    <form method="post" style="float:left;width:20%;" action="{% url 'photos:make3' %}">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ request.path }}">
+        <button type="submit">
+            <img src="{% static 'images/3.png' %}">
+        </button>
+    </form>
+    <form method="post" style="float:left;width:20%;" action="{% url 'photos:make4' %}">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ request.path }}">
+        <button type="submit">
+            <img src="{% static 'images/4.png' %}">
+        </button>
+    </form>
+    <form method="post" style="float:left;width:20%;" action="{% url 'photos:make5' %}">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ request.path }}">
+        <button type="submit">
+            <img src="{% static 'images/5.png' %}">
+        </button>
+    </form>
+  </div>
+  <div style="margin-top:5%;">
+    <br>
+    <br>
+    <p sytle="text-align:center;">
+      <img src="{% static 'output/output.png' %}">
+    </p>
+  </div>
+  
+
+
   
 {% endblock %}
