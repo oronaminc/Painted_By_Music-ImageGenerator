@@ -50,50 +50,50 @@
     </form>
 
     <br>
-    <div>
+    
     <form method="post" style="float:left;width:20%;" action="{% url 'photos:make1' %}" >
         {% csrf_token %}
-        <input type="hidden" name="next" value="{{ request.path }}">
+        <input type="hidden" name="next1" value="{{ request.path }}">
         <button type="submit">
             <img src="{% static 'images/1.png' %}">
         </button>
     </form>
     <form method="post" style="float:left;width:20%;" action="{% url 'photos:make2' %}">
         {% csrf_token %}
-        <input type="hidden" name="next" value="{{ request.path }}">
+        <input type="hidden" name="next1" value="{{ request.path }}">
         <button type="submit">
             <img src="{% static 'images/2.png' %}">
         </button>
     </form>
     <form method="post" style="float:left;width:20%;" action="{% url 'photos:make3' %}">
         {% csrf_token %}
-        <input type="hidden" name="next" value="{{ request.path }}">
+        <input type="hidden" name="next1" value="{{ request.path }}">
         <button type="submit">
             <img src="{% static 'images/3.png' %}">
         </button>
     </form>
     <form method="post" style="float:left;width:20%;" action="{% url 'photos:make4' %}">
         {% csrf_token %}
-        <input type="hidden" name="next" value="{{ request.path }}">
+        <input type="hidden" name="next1" value="{{ request.path }}">
         <button type="submit">
             <img src="{% static 'images/4.png' %}">
         </button>
     </form>
     <form method="post" style="float:left;width:20%;" action="{% url 'photos:make5' %}">
         {% csrf_token %}
-        <input type="hidden" name="next" value="{{ request.path }}">
+        <input type="hidden" name="next1" value="{{ request.path }}">
         <button type="submit">
             <img src="{% static 'images/5.png' %}">
         </button>
     </form>
-  </div>
-  <div style="margin-top:5%;">
-    <br>
-    <br>
-    <p sytle="text-align:center;">
+  
+    <form method="post" style="float:center;width:90%;">
+      {% csrf_token %}
+      <input type="hidden" name="next1" value="{{ request.path }}">
       <img src="{% static 'output/output.png' %}">
-    </p>
-  </div>
+  </form>
+ 
+
   
 
 

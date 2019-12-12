@@ -1,17 +1,17 @@
 
-Item no.: 1 --> Item name = wrong painting
+Item no.: 1 --> Item name = full painting
 Evaluating...
 Starting Download...
-Image URL: https://images.saatchiart.com/saatchi/56039/art/2842099/1911992-GSGICENV-6.jpg
-Completed Image ====> 1.1911992-GSGICENV-6.jpg
-Image URL: http://www.michelebubacco.com/images/3982/z/l1080936.jpg
-Completed Image ====> 2.l1080936.jpg
-Image URL: https://images.fineartamerica.com/images/artworkimages/mediumlarge/1/the-moment-i-recognized-nothing-was-wrong-ric-bascobert.jpg
-Completed Image ====> 3.the-moment-i-recognized-nothing-was-wrong-ric-bascobert.jpg
-Image URL: https://images.saatchiart.com/saatchi/745711/art/2642492/1712385-JYUNTNZG-6.jpg
-Completed Image ====> 4.1712385-JYUNTNZG-6.jpg
-Image URL: https://images.fineartamerica.com/images/artworkimages/mediumlarge/1/the-poem-of-the-soul-the-wrong-path-louis-janmot.jpg
-Completed Image ====> 5.the-poem-of-the-soul-the-wrong-path-louis-janmot.jpg
+Image URL: https://i.ytimg.com/vi/MOOHBJ9D3Ag/maxresdefault.jpg
+Completed Image ====> 1.maxresdefault.jpg
+Image URL: https://i.pinimg.com/originals/b9/9a/bc/b99abc6b2b7e6e621ae735fb49ee1344.jpg
+Completed Image ====> 2.b99abc6b2b7e6e621ae735fb49ee1344.jpg
+Image URL: https://i.ytimg.com/vi/hi6cXzjShqg/maxresdefault.jpg
+Completed Image ====> 3.maxresdefault.jpg
+Image URL: https://ae01.alicdn.com/kf/HTB18npgRXXXXXXzXVXXq6xXFXXXI/Zhui-Star-Diamond-Painting-Full-Square-Diamond-Colored-cat-3D-Embroidery-Cross-Stitch-Rhinestone-5D-DIY.jpg_640x640q70.jpg
+Completed Image ====> 4.Zhui-Star-Diamond-Painting-Full-Square-Diamond-Colored-cat-3D-Embroidery-Cross-Stitch-Rhinestone-5D-DIY.jpg
+Image URL: http://sc01.alicdn.com/kf/HTB1sDr0X_HuK1RkSndVq6xVwpXaV/Full-Beads-Romantic-lovers-in-Raining-Landscapes.jpg
+Completed Image ====> 5.Full-Beads-Romantic-lovers-in-Raining-Landscapes.jpg
 
 Errors: 0
 

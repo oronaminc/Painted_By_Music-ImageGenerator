@@ -1,16 +1,10 @@
 import time
-
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.views import View
 from django.http import HttpResponse
 from .forms import PhotoForm
 from .models import Photo
-
-#from module.lyrics import get_lyrics
-#from module.keywords import get_keywords
-#from module.download import get_urls
-#from module.GAN import get_image
 import json
 import urllib.request
 import os
@@ -72,7 +66,7 @@ class ProgressBarUploadView(View):
             data = {'is_valid': False}
         return JsonResponse(data)
 
-
+# Drag and Drop을 통한 mp3 파일 업로드
 class DragAndDropUploadView(View):
     def get(self, request):
         photos_list = Photo.objects.all()
@@ -87,13 +81,14 @@ class DragAndDropUploadView(View):
             data = {'is_valid': False}
         return JsonResponse(data)
 
-
+# 기존의 업로드 된 파일을 삭제하고 초기화 시킴
 def clear_database(request):
     for photo in Photo.objects.all():
         photo.file.delete()
         photo.delete()
     return redirect(request.POST.get('next'))
 
+# 이미지를 선택할 수 있도록 사진의 크기를 조절
 def resizeImage(name):
     pth = os.path.dirname(os.path.dirname(__file__))
     path = pth+'/photos/images/'
@@ -105,6 +100,7 @@ def resizeImage(name):
     cv2.imwrite(path2+name, resize_img)
     cv2.waitKey()
 
+# 작곡가와 노래 제목을 바탕으로 가사를 추출해냄 (가사를 크롤링 해서 가져옴)
 def get_lyrics(artist,song_title):
     artist = artist.lower()
     song_title = song_title.lower()
@@ -130,22 +126,7 @@ def get_lyrics(artist,song_title):
     except Exception as e:
         return "Exception occurred \n" +str(e)
 
-def get_keywords(txt, num):
-    ml = MonkeyLearn('5d0bc1abdddce358f1b7f076ca86b7bcd1bb78a1')
-    data = [txt]
-    model_id = 'ex_YCya9nrn'
-    result = ml.extractors.extract(model_id, data)
-
-    dic = result.body[0]
-    n = 0
-    keywords = []
-    for item in dic['extractions']:
-        keywords.append(item['parsed_value'])
-        n += 1
-        if n == num: break
-
-    return keywords
-
+# 키워드를 바탕으로 이미지의 주소를 가지고 옴.
 def get_urls(keyword, limit, isContent):
     orig_stdout = sys.stdout
     f = open('URLS.txt', 'w')
@@ -185,6 +166,7 @@ def get_urls(keyword, limit, isContent):
     
     return urls
 
+# GAN으로 합성된 이미지를 가지고 옴.
 def get_image(content, style):
     r = requests.post(
         "https://api.deepai.org/api/fast-style-transfer",
@@ -194,9 +176,9 @@ def get_image(content, style):
         },
         headers={'api-key': 'bcef51fe-566a-472e-a5da-f9b2b4dbd483'}
     )
-    #print(r.json())
     return r.json()
 
+# content url 과  style url의 값을 저장하는 txt 파일을 만드는 함수
 def make_txt(url_content, url_style):
     f = open("url_content.txt", "w")
 
@@ -225,8 +207,9 @@ def make_txt(url_content, url_style):
     return tmp_url_content, style_str
 
 
+# 가사를 기반으로 Content 키워드와 Style 키워드를 각각 추출하여 List 로 반환한다.
 def get_keyword():
-    # mp3 파일 업로드 경로 (!!! 경로 수정 필요)
+    # mp3 파일 업로드 경로
     pth = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
     print(pth)
     path = pth+'/media/musics'
@@ -242,11 +225,8 @@ def get_keyword():
     for i in range(len(file_list)):
         # '-'를 기준으로 가수와 제목을 구분
         playlist_splited.append(file_list[i].split('-'))
-    
-    # print(playlist_splited)
 
     # 앞에서 가져온 가수와 제목을 바탕으로 az api를 이용해 가사 검색 & 명사, 형용사 키워드 추출
-    # Music = azapi.AZlyrics()
     keyword_content = list()
     keyword_style = list()
     for artist, title in playlist_splited:
@@ -291,6 +271,7 @@ def get_keyword():
     print("Style Keywords :", keyword_style)
     return keyword_content, keyword_style
 
+# Main 함수 실행
 def run(request):
     pth = os.path.dirname(os.path.dirname(__file__))
     Path = pth+'/photos/output/'
@@ -318,15 +299,6 @@ def run(request):
     print("style: ", playlist_url_style)
 
     content_five_list, style_str = make_txt(playlist_url_content, playlist_url_style)
-    '''
-    limit = 5
-    Url_content = get_urls(keyword_content[1], limit, 1)
-    while not Url_content: Url_content = get_urls(keyword_content[1], limit, 1)
-    print("content: ", Url_content)
-    Url_style = get_urls(keyword_style[1], limit, 0)
-    while not Url_style: Url_style = get_urls(keyword_style[1], limit, 0)
-    print("style: ", Url_style)
-    '''
     print("=============Find Urls Done================\n")
 
     print("=============Start to Select Content Image============")
@@ -343,16 +315,14 @@ def run(request):
     
     return redirect(request.POST.get('next'))
 
+# 첫 번째 사진을 클릭했을 때 불러오는 함수
 def make1(request):
-    
-
     f = open("selected_content_number.txt", "w+")
     f.write("1")
     f.close()
     print("=============Select Content Image Done============")
 
     pth = os.path.dirname(os.path.dirname(__file__))
-    #Path_unresized = pth+'/photos/images/'
     Path_output = pth+'/static/output/'
 
     print("=============Start to Create Image================")
@@ -363,14 +333,13 @@ def make1(request):
 
     Url = get_image(final_content, final_style)
 
-    #Path = os.getcwd()+'/output/'
     N = len(glob.glob(Path_output+'*'))
     urllib.request.urlretrieve(Url['output_url'], Path_output+"output.png")
-    #urllib.request.urlretrieve(Url['output_url'], Path+"output.png")
     print("=============Create Image Done================")
    
-    return redirect(request.POST.get('next'))
+    return redirect(request.POST.get('next1'))
 
+# 두 번째 사진을 클릭했을 때 불러오는 함수
 def make2(request):
     f = open("selected_content_number.txt", "w+")
     f.write("2")
@@ -378,7 +347,6 @@ def make2(request):
     print("=============Select Content Image Done============")
 
     pth = os.path.dirname(os.path.dirname(__file__))
-    #Path_unresized = pth+'/photos/images/'
     Path_output = pth+'/static/output/'
 
     print("=============Start to Create Image================")
@@ -389,13 +357,12 @@ def make2(request):
 
     Url = get_image(final_content, final_style)
 
-    #Path = os.getcwd()+'/output/'
     N = len(glob.glob(Path_output+'*'))
     urllib.request.urlretrieve(Url['output_url'], Path_output+"output.png")
-    #urllib.request.urlretrieve(Url['output_url'], Path+"output.png")
     print("=============Create Image Done================")
-    return redirect(request.POST.get('next'))
+    return redirect(request.POST.get('next1'))
 
+# 세 번째 사진을 클릭했을 때 불러오는 함수
 def make3(request):
     f = open("selected_content_number.txt", "w+")
     f.write("3")
@@ -403,7 +370,6 @@ def make3(request):
     print("=============Select Content Image Done============")
 
     pth = os.path.dirname(os.path.dirname(__file__))
-    #Path_unresized = pth+'/photos/images/'
     Path_output = pth+'/static/output/'
 
     print("=============Start to Create Image================")
@@ -414,13 +380,12 @@ def make3(request):
 
     Url = get_image(final_content, final_style)
 
-    #Path = os.getcwd()+'/output/'
     N = len(glob.glob(Path_output+'*'))
     urllib.request.urlretrieve(Url['output_url'], Path_output+"output.png")
-    #urllib.request.urlretrieve(Url['output_url'], Path+"output.png")
     print("=============Create Image Done================")
-    return redirect(request.POST.get('next'))
+    return redirect(request.POST.get('next1'))
 
+# 네 번째 사진을 클릭했을 때 불러오는 함수
 def make4(request):
     f = open("selected_content_number.txt", "w+")
     f.write("4")
@@ -428,7 +393,6 @@ def make4(request):
     print("=============Select Content Image Done============")
 
     pth = os.path.dirname(os.path.dirname(__file__))
-    #Path_unresized = pth+'/photos/images/'
     Path_output = pth+'/static/output/'
 
     print("=============Start to Create Image================")
@@ -439,13 +403,12 @@ def make4(request):
 
     Url = get_image(final_content, final_style)
 
-    #Path = os.getcwd()+'/output/'
     N = len(glob.glob(Path_output+'*'))
     urllib.request.urlretrieve(Url['output_url'], Path_output+"output.png")
-    #urllib.request.urlretrieve(Url['output_url'], Path+"output.png")
     print("=============Create Image Done================")
-    return redirect(request.POST.get('next'))
+    return redirect(request.POST.get('next1'))
 
+# 다섯 번째 사진을 클릭했을 때 불러오는 함수
 def make5(request):
     f = open("selected_content_number.txt", "w+")
     f.write("5")
@@ -464,9 +427,7 @@ def make5(request):
 
     Url = get_image(final_content, final_style)
 
-    #Path = os.getcwd()+'/output/'
     N = len(glob.glob(Path_output+'*'))
     urllib.request.urlretrieve(Url['output_url'], Path_output+"output.png")
-    #urllib.request.urlretrieve(Url['output_url'], Path+"output.png")
     print("=============Create Image Done================")
-    return redirect(request.POST.get('next'))
+    return redirect(request.POST.get('next1'))

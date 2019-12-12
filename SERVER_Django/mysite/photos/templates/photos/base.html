@@ -19,15 +19,6 @@
           <h3 class="panel-title">Music Upload</h3>
         </div>
         <div class="list-group">
-          <!--
-          <a href="{% url 'photos:basic_upload' %}" class="list-group-item{% if request.path == '/photos/basic-upload/' %} active{% endif %}">
-            Basic Upload
-          </a>
-          
-          <a href="{% url 'photos:progress_bar_upload' %}" class="list-group-item{% if request.path == '/photos/progress-bar-upload/' %} active{% endif %}">
-            Progress Bar Upload
-          </a>
-          -->
           <a href="{% url 'photos:drag_and_drop_upload' %}" class="list-group-item{% if request.path == '/photos/drag-and-drop-upload/' %} active{% endif %}">
             Drag and Drop Upload
           </a>
