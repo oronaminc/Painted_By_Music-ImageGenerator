@@ -13,9 +13,9 @@ Painted_By_Music-ImageGenerator
 # ScreenShot
 
 <div>
-  <img width="800" src="https://user-images.githubusercontent.com/37185394/70791578-b41b8580-1dda-11ea-83e7-e2ceab2283d7.JPG"/>
-  <img width="800" src="https://user-images.githubusercontent.com/37185394/70791583-b54cb280-1dda-11ea-94c9-9ae504111bde.JPG"/>
-  <img width="800" src="https://user-images.githubusercontent.com/37185394/70791588-b67ddf80-1dda-11ea-8dc0-e1d9d89128c3.JPG"/>
+  <img width="250" src="https://user-images.githubusercontent.com/37185394/70791578-b41b8580-1dda-11ea-83e7-e2ceab2283d7.JPG"/>
+  <img width="250" src="https://user-images.githubusercontent.com/37185394/70791583-b54cb280-1dda-11ea-94c9-9ae504111bde.JPG"/>
+  <img width="250" src="https://user-images.githubusercontent.com/37185394/70791588-b67ddf80-1dda-11ea-8dc0-e1d9d89128c3.JPG"/>
 </div> 
 
 
