@@ -1,39 +1,29 @@
 # Painted_By_Music-ImageGenerator
 Painted_By_Music-ImageGenerator
 
-# Tongue-Diagnosis-Device
-- [Device] RaspberryPi(Using Camera Tongue detection) & Arduino(Circular LED control)
-- [Software] Pytorch(Disease classfication) and Opencv with python(Divide Tongue part & Analysis Tongue part)
-
 
 # Function
 
-1. In Device, Taking Pictrue in realtime video
-2. In Device, Control Circular LED brightness
-3. In Software, Classfication of Tongue Disease (using tongue state : red tongue/white tongue/pink tongue/little coated/white coated/yellow coated/Existence of tooth scar -> Disease Diagnosis)
-4. In Software, Divide and Analysis Tongue part (Divide Tongue into Top/Bottom/Side/Center part and Divide coated part or not)
+1. get_lyrics : Using artist and song title, finding lyrics (with web crawling) 
+2. get_keywords : Using lyrics, finding content keywords and style keywords (with nlk pakage)
+3. get_urls : Using keywords, finding google image urls _ multiple content URL and one style URL
+4. get_image : Using URLS, making special image (with DeepAI API)
 
-# HW Device(Arduino + RaspberryPI)
-<div>
-  <img width="800" src="https://user-images.githubusercontent.com/37185394/68458958-634ac700-0247-11ea-8fc4-6dd6b43b6dc4.gif"/>
-</div>
 
-# Presentation
+# ScreenShot
 
 <div>
-  <img width="800" src="https://user-images.githubusercontent.com/37185394/68457812-83c55200-0244-11ea-8725-edebf24eee41.JPG"/>
-  <img width="800" src="https://user-images.githubusercontent.com/37185394/68457813-83c55200-0244-11ea-8982-352223972716.JPG"/>
-  <img width="800" src="https://user-images.githubusercontent.com/37185394/68457814-83c55200-0244-11ea-9705-68b4ad7acec7.JPG"/>
-  <img width="800" src="https://user-images.githubusercontent.com/37185394/68457810-83c55200-0244-11ea-9800-b74488bdca70.JPG"/>
+  <img width="800" src="https://user-images.githubusercontent.com/37185394/70791578-b41b8580-1dda-11ea-83e7-e2ceab2283d7.JPG"/>
+  <img width="800" src="https://user-images.githubusercontent.com/37185394/70791583-b54cb280-1dda-11ea-94c9-9ae504111bde.JPG"/>
+  <img width="800" src="https://user-images.githubusercontent.com/37185394/70791588-b67ddf80-1dda-11ea-8dc0-e1d9d89128c3.JPG"/>
 </div> 
 
 
 # Result Video Clip
 
 <div>
-  <p> - Device Video Clip</p>
-  <img width="800" src="https://user-images.githubusercontent.com/37185394/66882526-b2fdf000-f005-11e9-80f5-95da78d58809.gif"/>
-  <iframe width="702" height="395" src="https://www.youtube.com/embed/-qXEjZ3ko_I" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> 
+  <p> - Running Video Clip</p>
+  <img width="800" src="https://user-images.githubusercontent.com/37185394/70791776-15dbef80-1ddb-11ea-9048-50ae1ef98588.gif"/>
  </div>
 
 
